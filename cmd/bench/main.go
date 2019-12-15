@@ -2,8 +2,8 @@ package main
 
 import (
 	"crypto"
-	"go-benchmark/cpu"
-	btime "go-benchmark/time"
+	"github.com/blinkspark/go-benchmark/cpu"
+	btime "github.com/blinkspark/go-benchmark/time"
 	"log"
 )
 
