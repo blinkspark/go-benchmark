@@ -1,4 +1,4 @@
-module go-benchmark
+module github.com/blinkspark/go-benchmark
 
 go 1.13
 
