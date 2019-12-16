@@ -2,24 +2,48 @@ package main
 
 import (
 	"crypto"
+	"log"
+
 	"github.com/blinkspark/go-benchmark/cpu"
 	btime "github.com/blinkspark/go-benchmark/time"
-	"log"
 )
 
+type entry struct {
+	name   string
+	runner btime.Runner
+}
+
+var tests = []entry{
+	entry{"sha256", sha256},
+	entry{"blake2b", blake2b},
+	entry{"rsa", rsa},
+	entry{"chacha20", chacha20},
+	entry{"aes256", aes256},
+}
+
 func main() {
-	t1 := btime.Time(func() {
-		cpu.Hash(crypto.SHA256, 1<<10, 1<<20, false)
-		// cpu.RSA(1000, 4096, 1<<20, false)
-		// cpu.ChaCha20(1000, 1<<20, false)
-		// cpu.AES(1000, 256, 1<<20, false)
-		// cpu.Test()
-	})
+	for _, v := range tests {
+		t := btime.Time(v.runner)
+		log.Println(v.name, ":", t)
+	}
+}
 
-	t2 := btime.Time(func() {
-		cpu.Hash(crypto.BLAKE2b_256, 1<<10, 1<<20, false)
-	})
+func sha256() {
+	cpu.Hash(crypto.SHA256, 1<<10, 1<<20, false)
+}
 
-	log.Println("Sha-256:", t1)
-	log.Println("Blake2b:", t2)
+func blake2b() {
+	cpu.Hash(crypto.BLAKE2b_256, 1<<10, 1<<20, false)
+}
+
+func rsa() {
+	cpu.RSA(1<<10, 4096, 1<<20, false)
+}
+
+func chacha20() {
+	cpu.ChaCha20(1000, 1<<20, false)
+}
+
+func aes256() {
+	cpu.AES(1<<10, 256, 1<<20, false)
 }
