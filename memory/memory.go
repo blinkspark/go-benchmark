@@ -1,7 +1,7 @@
 package memory
 
 import (
-	"crypto/rand"
+	"math/rand"
 )
 
 func MemCopy(rounds, datasize int) {
