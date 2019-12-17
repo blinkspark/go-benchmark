@@ -22,8 +22,8 @@ func Hash(hashType crypto.Hash, rounds int, dataSize int64, verbose bool) {
 	buffer := make([]byte, dataSize)
 	h := newHash(hashType)
 	mrand.Seed(0)
+	mrand.Read(buffer)
 	for i := 0; i < rounds; i++ {
-		mrand.Read(buffer)
 		_, err := h.Write(buffer)
 		if err != nil {
 			log.Panic(err)
@@ -77,8 +77,8 @@ func RSA(rounds, keyLength int, dataSize int64, verbose bool) {
 	buffer := make([]byte, dataSize)
 	h := newHash(crypto.BLAKE2b_256)
 	mrand.Seed(0)
+	mrand.Read(buffer)
 	for i := 0; i < rounds; i++ {
-		mrand.Read(buffer)
 		data, _ := rsa.EncryptOAEP(h, rand.Reader, &priv.PublicKey, buffer, nil)
 		if verbose {
 			fmt.Println(data)
@@ -95,9 +95,9 @@ func ChaCha20(rounds int, dataSize int64, verbose bool) {
 	c, _ := chacha20.NewUnauthenticatedCipher(key, nonce)
 	target := make([]byte, dataSize)
 	buffer := make([]byte, dataSize)
+	mrand.Read(buffer)
 
 	for i := 0; i < rounds; i++ {
-		mrand.Read(buffer)
 		c.XORKeyStream(target, buffer)
 	}
 }
@@ -109,8 +109,8 @@ func AES(rounds, bits int, dataSize int64, verbose bool) {
 	mrand.Seed(0)
 	buffer := make([]byte, dataSize)
 	dst := make([]byte, dataSize)
+	mrand.Read(buffer)
 	for i := 0; i < rounds; i++ {
-		mrand.Read(buffer)
 		c.Encrypt(dst, buffer)
 	}
 }
